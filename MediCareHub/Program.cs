@@ -1,3 +1,5 @@
+using MediCareHub.DAL.Data.Configurations;
+using Microsoft.EntityFrameworkCore;
 namespace MediCareHub
 {
     public class Program
@@ -8,7 +10,8 @@ namespace MediCareHub
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MediCareHubContext")));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
