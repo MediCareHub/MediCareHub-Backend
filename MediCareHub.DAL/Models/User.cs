@@ -14,7 +14,7 @@ namespace MediCareHub.DAL.Models
 
         [Required]
         [StringLength(100)]
-        public string FullName { get; set; }
+        public string? FullName { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -28,20 +28,20 @@ namespace MediCareHub.DAL.Models
         [Required]
         [StringLength(10)]
         [EnumDataType(typeof(RoleEnum))]
-        public string Role { get; set; }
+        public string? Role { get; set; }
 
         [StringLength(15)]
         [Phone]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime? DateOfBirth { get; set; }
 
         [StringLength(10)]
         [EnumDataType(typeof(GenderEnum))]
-        public string Gender { get; set; }
+        public string? Gender { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
     }
 
     public enum RoleEnum

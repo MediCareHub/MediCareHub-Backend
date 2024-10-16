@@ -1,4 +1,6 @@
 using MediCareHub.DAL.Data.Configurations;
+using MediCareHub.DAL.Repositories;
+using MediCareHub.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 namespace MediCareHub
 {
@@ -8,10 +10,21 @@ namespace MediCareHub
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Connect Database
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MediCareHubContext")));
+
+
+            // Repository
+
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+            builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
