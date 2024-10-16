@@ -14,7 +14,7 @@ namespace MediCareHub.DAL.Repositories
     {
         public PatientRepository(AppDbContext context) : base(context) { }
 
-        public async Task<Patient> GetPatientByUserIdAsync(int userId)
+        public async Task<Patient> GetByUserId(int userId)
         {
             return await _context.Patients.FirstOrDefaultAsync(p => p.PatientId == userId);
         }

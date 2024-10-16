@@ -10,16 +10,18 @@ using System.Threading.Tasks;
 
 namespace MediCareHub.DAL.Repositories
 {
-    public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
+    public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
     {
-        public DoctorRepository(AppDbContext context) : base(context)
+
+        public DepartmentRepository(AppDbContext context) : base(context)
         {
+            
         }
 
-
-        public async Task<Doctor> GetByUserId(int userId)
+        public async Task<List<Department>> GetAllAsync()
         {
-            return await _context.Doctors.FirstOrDefaultAsync(d => d.DoctorId == userId);
+            return await _context.Departments.ToListAsync();
         }
+
     }
 }

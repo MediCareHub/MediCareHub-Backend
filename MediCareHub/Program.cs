@@ -1,7 +1,10 @@
 using MediCareHub.DAL.Data.Configurations;
 using MediCareHub.DAL.Repositories;
 using MediCareHub.DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+
 namespace MediCareHub
 {
     public class Program
@@ -13,17 +16,26 @@ namespace MediCareHub
             // Connect Database
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MediCareHubContext")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("MediCareHubContext")));
 
-
-            // Repository
-
+            // Repository Registration
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
             builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
+            // Add Cookie Authentication
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login"; // Redirect to login page if not authenticated
+                    options.AccessDeniedPath = "/Account/AccessDenied"; // Redirect if access denied
+                    options.ExpireTimeSpan = TimeSpan.FromHours(8); // Cookie expiration time
+                });
 
+            // Add Authorization (optional, but useful if you use role-based access control)
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
@@ -31,7 +43,6 @@ namespace MediCareHub
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -40,11 +51,13 @@ namespace MediCareHub
 
             app.UseRouting();
 
+            // Ensure authentication middleware is included
+            app.UseAuthentication(); // <-- Add this line
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

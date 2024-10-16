@@ -56,7 +56,7 @@ namespace MediCareHub.DAL.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("MediCareHub.DAL.Models.Department", b =>
@@ -74,7 +74,7 @@ namespace MediCareHub.DAL.Migrations
 
                     b.HasKey("DepartmentId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("MediCareHub.DAL.Models.Doctor", b =>
@@ -101,7 +101,7 @@ namespace MediCareHub.DAL.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("MediCareHub.DAL.Models.DoctorAvailability", b =>
@@ -129,7 +129,7 @@ namespace MediCareHub.DAL.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("DoctorAvailability");
+                    b.ToTable("DoctorAvailability", (string)null);
                 });
 
             modelBuilder.Entity("MediCareHub.DAL.Models.MedicalRecord", b =>
@@ -158,7 +158,7 @@ namespace MediCareHub.DAL.Migrations
 
                     b.HasIndex("AppointmentId");
 
-                    b.ToTable("MedicalRecords");
+                    b.ToTable("MedicalRecords", (string)null);
                 });
 
             modelBuilder.Entity("MediCareHub.DAL.Models.Patient", b =>
@@ -188,7 +188,7 @@ namespace MediCareHub.DAL.Migrations
 
                     b.HasKey("PatientId");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
                 });
 
             modelBuilder.Entity("MediCareHub.DAL.Models.User", b =>
@@ -238,7 +238,7 @@ namespace MediCareHub.DAL.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("MediCareHub.DAL.Models.Appointment", b =>
