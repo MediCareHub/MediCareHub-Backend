@@ -53,11 +53,13 @@ namespace MediCareHub.Controllers
         [Authorize(Roles = "Patient")]
         public async Task<IActionResult> CompleteProfile(PatientProfileViewModel model)
         {
+            var userId = GetCurrentUserId(); // Assume this method fetches the logged-in user's ID
+
             if (ModelState.IsValid)
             {
                 var patient = new Patient
                 {
-                    PatientId = model.UserId, // Ensure you set this correctly
+                    PatientId = userId, // Ensure you set this correctly
                     MedicalHistory = model.MedicalHistory,
                     Allergies = model.Allergies,
                     CurrentMedications = model.CurrentMedications,
