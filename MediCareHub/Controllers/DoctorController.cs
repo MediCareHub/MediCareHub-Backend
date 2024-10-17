@@ -14,13 +14,15 @@ namespace MediCareHub.Controllers
         private readonly IDoctorRepository _doctorRepository;
         private readonly IUserRepository _userRepository;
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IAppointmentRepository _appointmentRepository;  // Added appointment repository
         private readonly ILogger<DoctorController> _logger;
 
-        public DoctorController(IDoctorRepository doctorRepository, IUserRepository userRepository, IDepartmentRepository departmentRepository, ILogger<DoctorController> logger)
+        public DoctorController(IDoctorRepository doctorRepository, IUserRepository userRepository, IDepartmentRepository departmentRepository, IAppointmentRepository appointmentRepository, ILogger<DoctorController> logger)
         {
             _doctorRepository = doctorRepository;
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
+            _appointmentRepository = appointmentRepository;  // Inject appointment repository
             _logger = logger;
         }
 
@@ -35,8 +37,19 @@ namespace MediCareHub.Controllers
                 return RedirectToAction("CompleteProfile");
             }
 
-            // Logic to fetch doctor-specific data for the dashboard
-            return View(); // Ensure you have a corresponding Doctor Dashboard view
+            // Fetch today's appointments for this doctor
+            var todayAppointments = await _appointmentRepository.GetTodayAppointmentsForDoctorAsync(doctor.DoctorId);
+            var pendingAppointments = await _appointmentRepository.GetPendingAppointmentsForDoctorAsync(doctor.DoctorId);
+
+
+            var dashboardViewModel = new DoctorDashboardViewModel
+            {
+                TodayAppointments = todayAppointments ?? new List<Appointment>(), // Handle possible null
+                PendingAppointments = pendingAppointments ?? new List<Appointment>(),
+                DoctorFullName = doctor.User.FullName // Pass the doctor's full name
+            };
+
+            return View(dashboardViewModel); // Return the dashboard view with appointments data
         }
 
         [HttpGet]
@@ -73,8 +86,6 @@ namespace MediCareHub.Controllers
             if (ModelState.IsValid)
             {
                 var userId = GetCurrentUserId();
-                Console.WriteLine($"Current User ID: {userId}"); // Log the user ID
-
                 var user = await _userRepository.GetByIdAsync(userId);
 
                 if (user == null)
@@ -88,7 +99,7 @@ namespace MediCareHub.Controllers
                 if (existingDoctor != null)
                 {
                     // Update existing doctor profile
-                    existingDoctor.DepartmentId = model.DepartmentId; // Use model's DepartmentId
+                    existingDoctor.DepartmentId = model.DepartmentId;
                     existingDoctor.ExperienceYears = model.ExperienceYears;
                     existingDoctor.Qualification = model.Qualification;
                     existingDoctor.Description = model.Description;
@@ -102,7 +113,7 @@ namespace MediCareHub.Controllers
                     {
                         DoctorId = userId, // Set UserId as DoctorId
                         User = user, // Associate the User entity
-                        DepartmentId = model.DepartmentId, // Use model's DepartmentId
+                        DepartmentId = model.DepartmentId,
                         ExperienceYears = model.ExperienceYears,
                         Qualification = model.Qualification,
                         Description = model.Description
@@ -120,6 +131,37 @@ namespace MediCareHub.Controllers
             ViewBag.Departments = await _departmentRepository.GetAllAsync();
             return View(model); // Return model with validation errors
         }
+
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> ListOfAppointments()
+        {
+            var doctorId = GetCurrentUserId(); // Get the current logged-in doctor's ID
+
+            // Fetch all appointments for this doctor
+            var appointments = await _appointmentRepository.GetAppointmentsForDoctorAsync(doctorId);
+
+            // Map appointments to the view model
+            var appointmentViewModels = appointments.Select(a => new AppointmentViewModel
+            {
+                AppointmentId = a.AppointmentId,
+                DoctorId = a.DoctorId,
+                PatientId = a.PatientId,
+                AppointmentDate = a.AppointmentDate,
+                Status = a.Status,
+                Notes = a.Notes,
+                CreatedAt = a.CreatedAt,
+                DoctorFullName = a.Doctor.User.FullName, // Fetch the doctor's full name
+                PatientFullName = a.Patient.User.FullName, // Fetch the patient's full name
+                MedicalRecord = a.MedicalRecord != null ? new MedicalRecordViewModel
+                {
+                    Diagnosis = a.MedicalRecord.Diagnosis,
+                    Medication = a.MedicalRecord.Medication
+                } : null
+            });
+
+            return View(appointmentViewModels); // Pass the list of appointments to the view
+        }
+
 
         private int GetCurrentUserId()
         {

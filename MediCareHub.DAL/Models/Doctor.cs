@@ -28,6 +28,8 @@ namespace MediCareHub.DAL.Models
         public string Qualification { get; set; }
 
         public string Description { get; set; }
+
+
     }
 
 }

@@ -1,39 +1,43 @@
 ﻿@model MediCareHub.ViewModels.DoctorProfileViewModel
 
-<h2>Complete Your Profile</h2>
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
+@{
+    ViewData["Title"] = "Complete Doctor Profile";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml"; // Use the same layout as the dashboard
 }
 
-<form asp-action="CompleteProfile" method="post">
-    <div class="form-group">
-        <label asp-for="DepartmentId"></label>
-        <select asp-for="DepartmentId" class="form-control" asp-items="@(new SelectList(ViewBag.Departments, "DepartmentId", "DepartmentName"))"></select>
-        <span asp-validation-for="DepartmentId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ExperienceYears"></label>
-        <input asp-for="ExperienceYears" class="form-control" type="number" />
-        <span asp-validation-for="ExperienceYears" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Qualification"></label>
-        <input asp-for="Qualification" class="form-control" />
-        <span asp-validation-for="Qualification" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Complete Profile</button>
-</form>
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Complete Your Profile</h1>
 
-@section Scripts {
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-}
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <form asp-action="CompleteProfile" method="post">
+        <div class="form-group">
+            <label asp-for="DepartmentId"></label>
+            <select asp-for="DepartmentId" class="form-control" asp-items="@(new SelectList(ViewBag.Departments, "DepartmentId", "DepartmentName"))"></select>
+            <span asp-validation-for="DepartmentId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ExperienceYears"></label>
+            <input asp-for="ExperienceYears" class="form-control" type="number" />
+            <span asp-validation-for="ExperienceYears" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Qualification"></label>
+            <input asp-for="Qualification" class="form-control" />
+            <span asp-validation-for="Qualification" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Complete Profile</button>
+    </form>
+</div>
+
