@@ -9,6 +9,8 @@ namespace MediCareHub.DAL.Repositories.Interfaces
 {
     public interface IPatientRepository : IGenericRepository<Patient>
     {
-        Task<Patient> GetPatientByUserIdAsync(int id);
+        Task<Patient> GetByUserId(int userId);
+
+
     }
 }

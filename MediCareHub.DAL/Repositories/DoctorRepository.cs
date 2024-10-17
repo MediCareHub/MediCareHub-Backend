@@ -16,11 +16,12 @@ namespace MediCareHub.DAL.Repositories
         {
         }
 
-        public async Task<Doctor> GetDoctorWithDetailsAsync(int id)
+
+        public async Task<Doctor> GetByUserId(int userId)
         {
             return await _context.Doctors
-                .Include(d => d.Department)
-                .FirstOrDefaultAsync(d => d.DoctorId == id);
+                .Include(d => d.User)  // Include the related User entity
+                .FirstOrDefaultAsync(d => d.DoctorId == userId);
         }
     }
 }

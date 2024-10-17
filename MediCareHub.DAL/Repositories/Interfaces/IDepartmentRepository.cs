@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace MediCareHub.DAL.Repositories.Interfaces
 {
-    public interface IDoctorRepository : IGenericRepository<Doctor>
+    public interface IDepartmentRepository : IGenericRepository<Department>
     {
-        Task<Doctor> GetByUserId(int userId);
+        Task<List<Department>> GetAllAsync();
+
     }
 }

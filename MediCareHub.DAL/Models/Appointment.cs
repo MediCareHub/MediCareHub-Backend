@@ -17,13 +17,12 @@ namespace MediCareHub.DAL.Models
         [ForeignKey("Doctor")]
         public int DoctorId { get; set; }
 
-        public virtual Doctor Doctor { get; set; }
+        
 
         [Required]
         [ForeignKey("Patient")]
         public int PatientId { get; set; }
 
-        public virtual Patient Patient { get; set; }
 
         public DateTime AppointmentDate { get; set; }
 
@@ -34,6 +33,15 @@ namespace MediCareHub.DAL.Models
         public string Notes { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+
+        // Navigation property
+
+        public virtual Doctor Doctor { get; set; }
+        public virtual Patient Patient { get; set; }
+        public virtual MedicalRecord MedicalRecord { get; set; }
+
+
     }
 
     public enum AppointmentStatus

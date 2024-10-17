@@ -17,13 +17,15 @@ namespace MediCareHub.DAL.Models
         [ForeignKey("Appointment")]
         public int AppointmentId { get; set; }
 
-        public virtual Appointment Appointment { get; set; }
 
         public string Diagnosis { get; set; }
 
         public string Medication { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        // Navigation property
+        public virtual Appointment Appointment { get; set; }
     }
 
 }
