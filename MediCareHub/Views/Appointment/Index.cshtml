@@ -6,6 +6,7 @@
 @model IEnumerable<MediCareHub.ViewModels.AppointmentViewModel>
 
 <h2>Appointments</h2>
+
 <table class="table">
     <thead>
         <tr>
@@ -16,6 +17,7 @@
             <th>Status</th>
             <th>Notes</th>
             <th>Created At</th>
+            <th>Actions</th> <!-- Add Actions column -->
         </tr>
     </thead>
     <tbody>
@@ -29,7 +31,14 @@
                 <td>@appointment.Status</td>
                 <td>@appointment.Notes</td>
                 <td>@appointment.CreatedAt.ToString("g")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@appointment.AppointmentId" class="btn btn-info">Details</a>
+                    <a asp-action="Edit" asp-route-id="@appointment.AppointmentId" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@appointment.AppointmentId" class="btn btn-danger">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
+
+<a asp-action="Create" class="btn btn-primary">Create New Appointment</a>
