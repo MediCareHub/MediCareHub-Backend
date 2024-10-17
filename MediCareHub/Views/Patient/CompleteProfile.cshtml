@@ -1,23 +1,42 @@
 ﻿@model MediCareHub.ViewModels.PatientProfileViewModel
 
-<h2>Complete Your Profile</h2>
+@{
+    ViewData["Title"] = "Complete Patient Profile";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml"; // Use the same layout as the doctor profile
+}
 
-<form asp-action="CompleteProfile" method="post">
-    <div>
-        <label asp-for="MedicalHistory"></label>
-        <textarea asp-for="MedicalHistory"></textarea>
-    </div>
-    <div>
-        <label asp-for="Allergies"></label>
-        <input asp-for="Allergies" />
-    </div>
-    <div>
-        <label asp-for="CurrentMedications"></label>
-        <input asp-for="CurrentMedications" />
-    </div>
-    <div>
-        <label asp-for="EmergencyContact"></label>
-        <input asp-for="EmergencyContact" />
-    </div>
-    <button type="submit">Complete Profile</button>
-</form>
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Complete Your Profile</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <form asp-action="CompleteProfile" method="post">
+        <div class="form-group">
+            <label asp-for="MedicalHistory"></label>
+            <textarea asp-for="MedicalHistory" class="form-control"></textarea>
+            <span asp-validation-for="MedicalHistory" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Allergies"></label>
+            <input asp-for="Allergies" class="form-control" />
+            <span asp-validation-for="Allergies" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CurrentMedications"></label>
+            <input asp-for="CurrentMedications" class="form-control" />
+            <span asp-validation-for="CurrentMedications" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="EmergencyContact"></label>
+            <input asp-for="EmergencyContact" class="form-control" />
+            <span asp-validation-for="EmergencyContact" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Complete Profile</button>
+    </form>
+</div>
