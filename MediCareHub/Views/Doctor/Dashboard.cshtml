@@ -1,0 +1,47 @@
+﻿@model MediCareHub.ViewModels.DoctorDashboardViewModel
+
+@{
+    ViewData["Title"] = "Doctor Dashboard";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml"; // Reference your layout here
+}
+
+<h1 class="h3 mb-4 text-gray-800">Welcome, @Model.DoctorFullName!</h1>
+
+<!-- Today's Appointments -->
+<h4>Today's Appointments</h4>
+<ul class="list-group">
+    @if (Model?.TodayAppointments != null && Model.TodayAppointments.Any())
+    {
+        foreach (var appointment in Model.TodayAppointments)
+        {
+            <li class="list-group-item">
+                <strong>@appointment.Patient.User.FullName</strong> - @appointment.AppointmentDate.ToString("hh:mm tt")
+                <span class="badge badge-success">@appointment.Status</span>
+                <a href="@Url.Action("ViewMedicalRecord", "Doctor", new { patientId = appointment.PatientId })" class="btn btn-sm btn-info">View Medical Record</a>
+            </li>
+        }
+    }
+    else
+    {
+        <li class="list-group-item">No appointments for today.</li>
+    }
+</ul>
+
+<!-- Pending Appointments -->
+<h4 class="mt-4">Pending Appointments</h4>
+<ul class="list-group">
+    @if (Model?.PendingAppointments != null && Model.PendingAppointments.Any())
+    {
+        foreach (var appointment in Model.PendingAppointments)
+        {
+            <li class="list-group-item">
+                <strong>@appointment.Patient.User.FullName</strong> - @appointment.AppointmentDate.ToString("MM/dd/yyyy hh:mm tt")
+                <span class="badge badge-warning">Pending</span>
+            </li>
+        }
+    }
+    else
+    {
+        <li class="list-group-item">No pending appointments.</li>
+    }
+</ul>

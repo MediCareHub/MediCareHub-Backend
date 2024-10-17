@@ -1,0 +1,23 @@
+﻿@model MediCareHub.ViewModels.PatientProfileViewModel
+
+<h2>Complete Your Profile</h2>
+
+<form asp-action="CompleteProfile" method="post">
+    <div>
+        <label asp-for="MedicalHistory"></label>
+        <textarea asp-for="MedicalHistory"></textarea>
+    </div>
+    <div>
+        <label asp-for="Allergies"></label>
+        <input asp-for="Allergies" />
+    </div>
+    <div>
+        <label asp-for="CurrentMedications"></label>
+        <input asp-for="CurrentMedications" />
+    </div>
+    <div>
+        <label asp-for="EmergencyContact"></label>
+        <input asp-for="EmergencyContact" />
+    </div>
+    <button type="submit">Complete Profile</button>
+</form>

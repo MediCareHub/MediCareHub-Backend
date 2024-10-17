@@ -27,5 +27,15 @@ namespace MediCareHub.ViewModels
 
         [Display(Name = "Created At")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        // Additional properties
+        [Display(Name = "Doctor Name")]
+        public string DoctorFullName { get; set; } // To display the doctor's name
+
+        [Display(Name = "Patient Name")]
+        public string PatientFullName { get; set; } // To display the patient's name
+
+        // Medical Record Information
+        public MedicalRecordViewModel MedicalRecord { get; set; } // To display medical report details if available
     }
 }
