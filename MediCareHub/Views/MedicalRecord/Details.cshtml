@@ -5,6 +5,11 @@
 }
 @model MediCareHub.ViewModels.MedicalRecordViewModel
 
+@{
+    ViewData["Title"] = "Medical Record Details";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
 <h2>Medical Record Details</h2>
 
 <div>
@@ -28,4 +33,5 @@
     </dl>
 </div>
 
-<a class="btn btn-secondary" href="@Url.Action("Index")">Back to List</a>
+<a class="btn btn-secondary" href="@Url.Action("Dashboard", "Doctor")">Back to Dashboard</a>
+

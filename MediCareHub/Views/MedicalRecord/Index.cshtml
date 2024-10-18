@@ -5,6 +5,10 @@
 }
 @model IEnumerable<MediCareHub.ViewModels.MedicalRecordViewModel>
 
+@{
+    ViewData["Title"] = "Medical Records";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml"; // Reference your Doctor layout here
+}
 <h2>Medical Records</h2>
 
 <table class="table">

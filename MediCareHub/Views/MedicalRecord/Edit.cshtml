@@ -5,7 +5,10 @@
 }
 
 @model MediCareHub.ViewModels.MedicalRecordViewModel
-
+@{
+    ViewData["Title"] = "Medical Record Details";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
 <h2>Edit Medical Record</h2>
 
 <form asp-action="Edit" method="post">
