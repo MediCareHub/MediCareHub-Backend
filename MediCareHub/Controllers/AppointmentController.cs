@@ -33,6 +33,7 @@ namespace MediCareHub.Controllers
                 {
                     AppointmentId = a.AppointmentId,
                     PatientId = a.PatientId,
+                    PatientFullName = a.Patient.User.FullName,
                     AppointmentDate = a.AppointmentDate,
                     Status = a.Status,
                     Notes = a.Notes,

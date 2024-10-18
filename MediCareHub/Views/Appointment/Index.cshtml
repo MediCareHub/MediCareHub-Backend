@@ -14,7 +14,7 @@
     <thead>
         <tr>
             <th>Appointment ID</th>
-            <th>Patient ID</th>
+            <th>Patient Name</th>
             <th>Appointment Date</th>
             <th>Status</th>
             <th>Notes</th>
@@ -27,7 +27,8 @@
             <tr>
                 <td>@appointment.AppointmentId</td>
 @*                 <td>@appointment.DoctorId</td>
- *@                <td>@appointment.PatientId</td>
+            *@
+                <td>@appointment.PatientFullName</td>
                 <td>@appointment.AppointmentDate.ToString("g")</td>
                 <td>@appointment.Status</td>
                 <td>@appointment.Notes</td>
