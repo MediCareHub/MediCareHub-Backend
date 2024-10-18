@@ -1,9 +1,4 @@
 ﻿using MediCareHub.DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MediCareHub.DAL.Repositories.Interfaces
 {
@@ -13,6 +8,7 @@ namespace MediCareHub.DAL.Repositories.Interfaces
         Task<IEnumerable<Appointment>> GetPendingAppointmentsForDoctorAsync(int doctorId);
         Task<IEnumerable<Appointment>> GetAppointmentsForDoctorAsync(int doctorId);
 
-        // Other methods for Appointment management
+        Task<IEnumerable<Appointment>> GetAppointmentsForPatientAsync(int patientId);
+        Task<IEnumerable<Appointment>> GetUpcomingAppointmentsForPatientAsync(int patientId);
     }
 }

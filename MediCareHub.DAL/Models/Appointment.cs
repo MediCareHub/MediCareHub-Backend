@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MediCareHub.DAL.Models
 {
@@ -17,7 +12,7 @@ namespace MediCareHub.DAL.Models
         [ForeignKey("Doctor")]
         public int DoctorId { get; set; }
 
-        
+
 
         [Required]
         [ForeignKey("Patient")]
@@ -50,5 +45,5 @@ namespace MediCareHub.DAL.Models
         Completed,
         Canceled
     }
-    
+
 }

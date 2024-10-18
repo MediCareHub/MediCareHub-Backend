@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using MediCareHub.DAL.Models;
 using MediCareHub.DAL.Repositories.Interfaces;
 using MediCareHub.ViewModels;
-using MediCareHub.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace MediCareHub.Controllers
 {
@@ -147,7 +145,7 @@ namespace MediCareHub.Controllers
                 DoctorId = a.DoctorId,
                 PatientId = a.PatientId,
                 AppointmentDate = a.AppointmentDate,
-                Status = a.Status,
+                Status = a.Status.ToString(),
                 Notes = a.Notes,
                 CreatedAt = a.CreatedAt,
                 DoctorFullName = a.Doctor.User.FullName, // Fetch the doctor's full name

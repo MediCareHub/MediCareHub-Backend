@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using BCrypt.Net;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using MediCareHub.DAL.Models;
+﻿using MediCareHub.DAL.Models;
 using MediCareHub.DAL.Repositories.Interfaces;
 using MediCareHub.ViewModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace MediCareHub.Controllers
 {
@@ -195,6 +192,7 @@ namespace MediCareHub.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
             return RedirectToAction("Login", "Account");
         }
 
