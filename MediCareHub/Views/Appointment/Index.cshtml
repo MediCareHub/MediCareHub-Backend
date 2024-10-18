@@ -4,7 +4,10 @@
 @{
 }
 @model IEnumerable<MediCareHub.ViewModels.AppointmentViewModel>
-
+@{
+    ViewData["Title"] = "Medical Record Details";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
 <h2>Appointments</h2>
 
 <table class="table">
@@ -25,13 +28,13 @@
         {
             <tr>
                 <td>@appointment.AppointmentId</td>
-                <td>@appointment.DoctorId</td>
-                <td>@appointment.PatientId</td>
+@*                 <td>@appointment.DoctorId</td>
+ *@                <td>@appointment.PatientId</td>
                 <td>@appointment.AppointmentDate.ToString("g")</td>
                 <td>@appointment.Status</td>
                 <td>@appointment.Notes</td>
-                <td>@appointment.CreatedAt.ToString("g")</td>
-                <td>
+@*                 <td>@appointment.CreatedAt.ToString("g")</td>
+ *@                <td>
                     <a asp-action="Details" asp-route-id="@appointment.AppointmentId" class="btn btn-info">Details</a>
                     <a asp-action="Edit" asp-route-id="@appointment.AppointmentId" class="btn btn-warning">Edit</a>
                     <a asp-action="Delete" asp-route-id="@appointment.AppointmentId" class="btn btn-danger">Delete</a>

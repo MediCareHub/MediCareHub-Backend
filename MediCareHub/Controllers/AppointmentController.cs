@@ -19,12 +19,12 @@ namespace MediCareHub.Controllers
                                       .Select(a => new AppointmentViewModel
                                       {
                                           AppointmentId = a.AppointmentId,
-                                          DoctorId = a.DoctorId,
+                                          //DoctorId = a.DoctorId,
                                           PatientId = a.PatientId,
                                           AppointmentDate = a.AppointmentDate,
                                           Status = a.Status,
                                           Notes = a.Notes,
-                                          CreatedAt = a.CreatedAt
+                                          //CreatedAt = a.CreatedAt
                                       }).ToList();
 
             return View(appointments);
@@ -42,7 +42,7 @@ namespace MediCareHub.Controllers
             {
                 var appointment = new Appointment
                 {
-                    DoctorId = model.DoctorId,
+                    //DoctorId = model.DoctorId,
                     PatientId = model.PatientId,
                     AppointmentDate = model.AppointmentDate,
                     Status = model.Status,
@@ -66,12 +66,14 @@ namespace MediCareHub.Controllers
                                       .Select(a => new AppointmentViewModel
                                       {
                                           AppointmentId = a.AppointmentId,
-                                          DoctorId = a.DoctorId,
+                                          //DoctorId = a.DoctorId,
                                           PatientId = a.PatientId,
                                           AppointmentDate = a.AppointmentDate,
                                           Status = a.Status,
                                           Notes = a.Notes,
-                                          CreatedAt = a.CreatedAt
+                                          //CreatedAt = a.CreatedAt,
+                                          DoctorFullName = a.Doctor.User.FullName,
+                                          PatientFullName = a.Patient.User.FullName
                                       }).FirstOrDefault();
 
             if (appointment == null)
@@ -89,12 +91,14 @@ namespace MediCareHub.Controllers
                                       .Select(a => new AppointmentViewModel
                                       {
                                           AppointmentId = a.AppointmentId,
-                                          DoctorId = a.DoctorId,
+                                          //DoctorId = a.DoctorId,
                                           PatientId = a.PatientId,
                                           AppointmentDate = a.AppointmentDate,
                                           Status = a.Status,
                                           Notes = a.Notes,
-                                          CreatedAt = a.CreatedAt
+                                          //CreatedAt = a.CreatedAt
+                                          DoctorFullName = a.Doctor.User.FullName,
+                                          PatientFullName = a.Patient.User.FullName
                                       }).FirstOrDefault();
 
             if (appointment == null)
@@ -109,6 +113,15 @@ namespace MediCareHub.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, AppointmentViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    System.Diagnostics.Debug.WriteLine(error.ErrorMessage);
+                }
+                return View(model);
+            }
             if (ModelState.IsValid)
             {
                 var appointment = _context.Appointments.FirstOrDefault(a => a.AppointmentId == id);
@@ -117,9 +130,9 @@ namespace MediCareHub.Controllers
                     return NotFound();
                 }
 
-                appointment.DoctorId = model.DoctorId;
+                //appointment.DoctorId = model.DoctorId;
                 appointment.PatientId = model.PatientId;
-                appointment.AppointmentDate = model.AppointmentDate;
+                //appointment.AppointmentDate = model.AppointmentDate;
                 appointment.Status = model.Status;
                 appointment.Notes = model.Notes;
 
@@ -138,12 +151,12 @@ namespace MediCareHub.Controllers
                                       .Select(a => new AppointmentViewModel
                                       {
                                           AppointmentId = a.AppointmentId,
-                                          DoctorId = a.DoctorId,
+                                          //DoctorId = a.DoctorId,
                                           PatientId = a.PatientId,
                                           AppointmentDate = a.AppointmentDate,
                                           Status = a.Status,
                                           Notes = a.Notes,
-                                          CreatedAt = a.CreatedAt
+                                          //CreatedAt = a.CreatedAt
                                       }).FirstOrDefault();
 
             if (appointment == null)
