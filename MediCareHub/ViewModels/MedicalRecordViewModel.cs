@@ -20,5 +20,8 @@ namespace MediCareHub.ViewModels
 
         [Display(Name = "Created At")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        [Display(Name = "Patient Name")]
+        public string PatientFullName { get; set; }
     }
 }

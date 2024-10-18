@@ -14,8 +14,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Record ID</th>
             <th>Appointment ID</th>
+            <th>Patient Name</th>
             <th>Diagnosis</th>
             <th>Medication</th>
             <th>Created At</th>
@@ -26,8 +26,8 @@
         @foreach (var record in Model)
         {
             <tr>
-                <td>@record.RecordId</td>
                 <td>@record.AppointmentId</td>
+                <td>@record.PatientFullName</td> 
                 <td>@record.Diagnosis</td>
                 <td>@record.Medication</td>
                 <td>@record.CreatedAt.ToString("g")</td>
