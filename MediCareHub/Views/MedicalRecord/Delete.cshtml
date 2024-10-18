@@ -27,5 +27,5 @@
 <form asp-action="Delete" method="post">
     <input type="hidden" asp-for="RecordId" />
     <button type="submit" class="btn btn-danger">Delete</button>
-    <a class="btn btn-secondary" href="@Url.Action("Index")">Cancel</a>
+    <a class="btn btn-secondary" href="javascript:window.history.back();">Back</a>
 </form>

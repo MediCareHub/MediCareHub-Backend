@@ -7,10 +7,6 @@ namespace MediCareHub.ViewModels
         [Required]
         public int AppointmentId { get; set; }
 
-        //[Required]
-        //public int DoctorId { get; set; }
-
-        //[Required]
         public int PatientId { get; set; }
 
         [Required]
@@ -24,9 +20,6 @@ namespace MediCareHub.ViewModels
 
         [Display(Name = "Notes")]
         public string Notes { get; set; }
-
-        //[Display(Name = "Created At")]
-        //public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         // Additional properties
         [Display(Name = "Doctor Name")]

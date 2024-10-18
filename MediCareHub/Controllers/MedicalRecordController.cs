@@ -27,9 +27,13 @@ namespace MediCareHub.Controllers
 
             return View(records);
         }
-        public IActionResult Create()
+        public IActionResult Create(int appointmentId)
         {
-            return View();
+            var model = new MedicalRecordViewModel
+            {
+                AppointmentId = appointmentId
+            };
+            return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -47,7 +51,7 @@ namespace MediCareHub.Controllers
 
                 _context.MedicalRecords.Add(record);
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Appointment", new { id = model.AppointmentId });
             }
 
             return View(model);
@@ -113,7 +117,7 @@ namespace MediCareHub.Controllers
                 record.Medication = model.Medication;
 
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Appointment", new { id = model.AppointmentId });
             }
 
             return View(model);

@@ -62,19 +62,27 @@ namespace MediCareHub.Controllers
         public IActionResult Details(int id)
         {
             var appointment = _context.Appointments
-                                      .Where(a => a.AppointmentId == id)
-                                      .Select(a => new AppointmentViewModel
-                                      {
-                                          AppointmentId = a.AppointmentId,
-                                          //DoctorId = a.DoctorId,
-                                          PatientId = a.PatientId,
-                                          AppointmentDate = a.AppointmentDate,
-                                          Status = a.Status,
-                                          Notes = a.Notes,
-                                          //CreatedAt = a.CreatedAt,
-                                          DoctorFullName = a.Doctor.User.FullName,
-                                          PatientFullName = a.Patient.User.FullName
-                                      }).FirstOrDefault();
+                .Where(a => a.AppointmentId == id)
+                .Select(a => new AppointmentViewModel
+                {
+                    AppointmentId = a.AppointmentId,
+                    PatientId = a.PatientId,
+                    AppointmentDate = a.AppointmentDate,
+                    Status = a.Status,
+                    Notes = a.Notes,
+                    DoctorFullName = a.Doctor.User.FullName,
+                    PatientFullName = a.Patient.User.FullName,
+                    MedicalRecord = _context.MedicalRecords
+                        .Where(mr => mr.AppointmentId == a.AppointmentId)
+                        .Select(mr => new MedicalRecordViewModel
+                        {
+                            RecordId = mr.RecordId,
+                            AppointmentId = mr.AppointmentId,
+                            Diagnosis = mr.Diagnosis,
+                            Medication = mr.Medication,
+                            CreatedAt = mr.CreatedAt
+                        }).FirstOrDefault() // Get the latest medical record or remove if you want all records
+                }).FirstOrDefault();
 
             if (appointment == null)
             {
@@ -83,6 +91,7 @@ namespace MediCareHub.Controllers
 
             return View(appointment);
         }
+
 
         public IActionResult Edit(int id)
         {

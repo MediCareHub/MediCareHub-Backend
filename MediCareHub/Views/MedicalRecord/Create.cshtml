@@ -12,11 +12,7 @@
 <h2>Create Medical Record</h2>
 
 <form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="AppointmentId"></label>
-        <input asp-for="AppointmentId" class="form-control" />
-        <span asp-validation-for="AppointmentId" class="text-danger"></span>
-    </div>
+    <input type="hidden" asp-for="AppointmentId" />
 
     <div class="form-group">
         <label asp-for="Diagnosis"></label>
@@ -31,6 +27,5 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Create</button>
-    <a class="btn btn-secondary" href="@Url.Action("Index")">Cancel</a>
+    <a class="btn btn-secondary" href="javascript:window.history.back();">Back</a>
 </form>
-
