@@ -1,23 +1,16 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model MediCareHub.ViewModels.MedicalRecordViewModel
 @{
-}
-
-@model MediCareHub.ViewModels.MedicalRecordViewModel
-@{
-    ViewData["Title"] = "Medical Record Details";
+    ViewData["Title"] = "Edit Medical Record";
     Layout = "~/Views/Shared/_DoctorLayout.cshtml";
 }
 <h2>Edit Medical Record</h2>
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="RecordId" />
-
+    <input type="hidden" asp-for="AppointmentId" />
     <div class="form-group">
-        <label asp-for="AppointmentId"></label>
-        <input asp-for="AppointmentId" class="form-control" />
-        <span asp-validation-for="AppointmentId" class="text-danger"></span>
+        <label asp-for="PatientFullName"></label>
+        <input asp-for="PatientFullName" class="form-control" readonly />
     </div>
 
     <div class="form-group">
@@ -35,4 +28,3 @@
     <button type="submit" class="btn btn-primary">Save</button>
     <a class="btn btn-secondary" href="javascript:window.history.back();">Back</a>
 </form>
-
