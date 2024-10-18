@@ -20,8 +20,8 @@
                     @appointment.Patient.User.FullName
                 </span> - @appointment.AppointmentDate.ToString("hh:mm tt")
                 <span class="badge badge-success">@appointment.Status</span>
-                <a href="@Url.Action("Details", "MedicalRecord", new { id = appointment.PatientId })" class="btn btn-sm btn-info">View Medical Record</a>
-            </li>
+@*                 <a href="@Url.Action("Details", "MedicalRecord", new { id = appointment.PatientId })" class="btn btn-sm btn-info">View Medical Record</a>
+ *@            </li>
         }
     }
     else

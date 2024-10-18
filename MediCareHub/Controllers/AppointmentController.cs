@@ -2,30 +2,41 @@
 using Microsoft.AspNetCore.Mvc;
 using MediCareHub.DAL.Data.Configurations;
 using MediCareHub.DAL.Models;
-
+using System.Security.Claims;
+using MediCareHub.DAL.Repositories.Interfaces;
 namespace MediCareHub.Controllers
 {
     public class AppointmentController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IDoctorRepository _doctorRepository;
 
-        public AppointmentController(AppDbContext context)
+        public AppointmentController(AppDbContext context, IDoctorRepository doctorRepository)
         {
             _context = context;
+            _doctorRepository = doctorRepository;
         }
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index() 
         {
+            var userId = GetCurrentUserId();
+            var doctor = await _doctorRepository.GetByUserId(userId);
+
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
             var appointments = _context.Appointments
-                                      .Select(a => new AppointmentViewModel
-                                      {
-                                          AppointmentId = a.AppointmentId,
-                                          //DoctorId = a.DoctorId,
-                                          PatientId = a.PatientId,
-                                          AppointmentDate = a.AppointmentDate,
-                                          Status = a.Status,
-                                          Notes = a.Notes,
-                                          //CreatedAt = a.CreatedAt
-                                      }).ToList();
+                .Where(a => a.DoctorId == doctor.DoctorId) 
+                .Select(a => new AppointmentViewModel
+                {
+                    AppointmentId = a.AppointmentId,
+                    PatientId = a.PatientId,
+                    AppointmentDate = a.AppointmentDate,
+                    Status = a.Status,
+                    Notes = a.Notes,
+                }).ToList();
 
             return View(appointments);
         }
@@ -193,8 +204,15 @@ namespace MediCareHub.Controllers
         }
 
 
-
+        private int GetCurrentUserId()
+        {
+            // Retrieve the current user ID from claims
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            return userIdClaim != null ? int.Parse(userIdClaim.Value) : 0;
+        }
 
 
     }
+
 }
+
