@@ -2,7 +2,7 @@
 {
     public class PatientProfileViewModel
     {
-        public int UserId { get; set; } // This should hold the UserId of the logged-in user
+        public int UserId { get; set; }
         public string MedicalHistory { get; set; }
         public string Allergies { get; set; }
         public string CurrentMedications { get; set; }

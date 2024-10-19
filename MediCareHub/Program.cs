@@ -2,7 +2,6 @@ using MediCareHub.DAL.Data.Configurations;
 using MediCareHub.DAL.Repositories;
 using MediCareHub.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace MediCareHub

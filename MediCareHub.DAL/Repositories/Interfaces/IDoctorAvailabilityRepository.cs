@@ -11,5 +11,6 @@ namespace MediCareHub.DAL.Repositories.Interfaces
     {
         void AddAvailability(DoctorAvailability availability);
         void Save();
+        Task<IEnumerable<DoctorAvailability>> GetAvailableSlotsForDoctor(int doctorId);
     }
 }

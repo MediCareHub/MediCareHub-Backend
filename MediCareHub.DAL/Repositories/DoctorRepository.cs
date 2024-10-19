@@ -2,11 +2,6 @@
 using MediCareHub.DAL.Models;
 using MediCareHub.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MediCareHub.DAL.Repositories
 {
@@ -20,9 +15,21 @@ namespace MediCareHub.DAL.Repositories
         public async Task<Doctor> GetByUserId(int userId)
         {
             return await _context.Doctors
-                .Include(d => d.User)  // Include the related User entity
-                .Include(d =>d.Department)
-                .FirstOrDefaultAsync(d => d.DoctorId == userId);
+    .Include(d => d.User)
+    .Include(d => d.Department)
+    .FirstOrDefaultAsync(d => d.DoctorId == userId);  // This is looking for a doctor by DoctorId, not UserId
+
         }
+
+        public async Task<IEnumerable<Doctor>> GetAllAsync()
+        {
+            return await _context.Doctors
+                .Include(d => d.User)      // Include User entity
+                .Include(d => d.Department) // Include Department for specialty
+                .ToListAsync();
+        }
+
+
+
     }
 }

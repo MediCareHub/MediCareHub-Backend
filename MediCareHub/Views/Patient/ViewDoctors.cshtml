@@ -1,0 +1,62 @@
+﻿@model MediCareHub.ViewModels.ViewDoctorsViewModel
+
+@{
+    ViewData["Title"] = "Available Doctors";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml"; // Use the patient layout to maintain consistency
+}
+
+<h2 class="h3 mb-4 text-gray-800">Available Doctors</h2>
+
+<!-- List of Doctors -->
+@foreach (var doctor in Model.Doctors)
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="h5">Dr. @doctor.DoctorFullName</h3>
+            <p class="text-muted">Specialty: @doctor.Specialty</p>
+        </div>
+        <div class="card-body">
+            <h4 class="h6">Doctor's Availability:</h4>
+            @if (doctor.AvailableTimeSlots != null && doctor.AvailableTimeSlots.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var timeSlot in doctor.AvailableTimeSlots)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>@timeSlot.DayOfWeek: @timeSlot.StartTime.ToString(@"hh\:mm") - @timeSlot.EndTime.ToString(@"hh\:mm")</span>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No available time slots.</p>
+            }
+
+            <h4 class="h6 mt-3">Available Appointments:</h4>
+            @if (doctor.AvailableAppointments != null && doctor.AvailableAppointments.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var appointment in doctor.AvailableAppointments)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>@appointment.AppointmentDate.ToString("MM/dd/yyyy hh:mm tt")</span>
+                            <span class="badge badge-info">@appointment.Status</span>
+                            <a href="@Url.Action("BookAppointment", "Patient", new { appointmentId = appointment.AppointmentId })" class="btn btn-sm btn-primary">Book</a>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No available appointments.</p>
+            }
+
+            <!-- Add the Book Appointment Button for the Doctor -->
+            <a href="@Url.Action("BookAppointment", "Patient", new { doctorId = doctor.DoctorId })" class="btn btn-primary mt-3">
+                Book an Appointment
+            </a>
+        </div>
+    </div>
+}
+
