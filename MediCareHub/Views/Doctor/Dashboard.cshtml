@@ -15,10 +15,13 @@
         foreach (var appointment in Model.TodayAppointments)
         {
             <li class="list-group-item">
-                <strong>@appointment.Patient.User.FullName</strong> - @appointment.AppointmentDate.ToString("hh:mm tt")
+                <span style="color: gray; font-weight: bold; cursor: pointer;"
+                      onclick="location.href='@Url.Action("Details", "Appointment", new { id = appointment.AppointmentId })'">
+                    @appointment.Patient.User.FullName
+                </span> - @appointment.AppointmentDate.ToString("hh:mm tt")
                 <span class="badge badge-success">@appointment.Status</span>
-                <a href="@Url.Action("ViewMedicalRecord", "Doctor", new { patientId = appointment.PatientId })" class="btn btn-sm btn-info">View Medical Record</a>
-            </li>
+@*                 <a href="@Url.Action("Details", "MedicalRecord", new { id = appointment.PatientId })" class="btn btn-sm btn-info">View Medical Record</a>
+ *@            </li>
         }
     }
     else
@@ -35,7 +38,10 @@
         foreach (var appointment in Model.PendingAppointments)
         {
             <li class="list-group-item">
-                <strong>@appointment.Patient.User.FullName</strong> - @appointment.AppointmentDate.ToString("MM/dd/yyyy hh:mm tt")
+                <span style="color: gray; font-weight: bold; cursor: pointer;"
+                      onclick="location.href='@Url.Action("Details", "Appointment", new { id = appointment.AppointmentId })'">
+                    @appointment.Patient.User.FullName
+                </span> - @appointment.AppointmentDate.ToString("MM/dd/yyyy hh:mm tt")
                 <span class="badge badge-warning">Pending</span>
             </li>
         }

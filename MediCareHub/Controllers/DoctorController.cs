@@ -163,12 +163,12 @@ namespace MediCareHub.Controllers
             var appointmentViewModels = appointments.Select(a => new AppointmentViewModel
             {
                 AppointmentId = a.AppointmentId,
-                DoctorId = a.DoctorId,
+                //DoctorId = a.DoctorId,
                 PatientId = a.PatientId,
                 AppointmentDate = a.AppointmentDate,
                 Status = a.Status,
                 Notes = a.Notes,
-                CreatedAt = a.CreatedAt,
+                //CreatedAt = a.CreatedAt,
                 DoctorFullName = a.Doctor.User.FullName, // Fetch the doctor's full name
                 PatientFullName = a.Patient.User.FullName, // Fetch the patient's full name
                 MedicalRecord = a.MedicalRecord != null ? new MedicalRecordViewModel
