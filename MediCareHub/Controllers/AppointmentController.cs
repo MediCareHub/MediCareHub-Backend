@@ -4,6 +4,7 @@ using MediCareHub.DAL.Data.Configurations;
 using MediCareHub.DAL.Models;
 using System.Security.Claims;
 using MediCareHub.DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 namespace MediCareHub.Controllers
 {
     public class AppointmentController : Controller
@@ -104,30 +105,33 @@ namespace MediCareHub.Controllers
             return View(appointment);
         }
 
-
         public IActionResult Edit(int id)
         {
             var appointment = _context.Appointments
-                                      .Where(a => a.AppointmentId == id)
-                                      .Select(a => new AppointmentViewModel
-                                      {
-                                          AppointmentId = a.AppointmentId,
-                                          //DoctorId = a.DoctorId,
-                                          PatientId = a.PatientId,
-                                          AppointmentDate = a.AppointmentDate,
-                                          Status = a.Status,
-                                          Notes = a.Notes,
-                                          //CreatedAt = a.CreatedAt
-                                          DoctorFullName = a.Doctor.User.FullName,
-                                          PatientFullName = a.Patient.User.FullName
-                                      }).FirstOrDefault();
+                .Include(a => a.Patient) 
+                .ThenInclude(p => p.User)
+                .Include(a => a.Doctor)
+                .ThenInclude(d => d.User)
+                .FirstOrDefault(a => a.AppointmentId == id);
 
             if (appointment == null)
             {
                 return NotFound();
             }
 
-            return View(appointment);
+            var model = new AppointmentViewModel
+            {
+                AppointmentId = appointment.AppointmentId,
+                PatientId = appointment.PatientId,
+                AppointmentDate = appointment.AppointmentDate,
+                Status = appointment.Status,
+                Notes = appointment.Notes,
+                DoctorFullName = appointment.Doctor.User.FullName,
+                PatientFullName = appointment.Patient.User.FullName,
+                MedicalRecord = new MedicalRecordViewModel()
+            };
+
+            return View(model);
         }
 
         [HttpPost]
@@ -136,6 +140,7 @@ namespace MediCareHub.Controllers
         {
             if (!ModelState.IsValid)
             {
+                // Log errors for debugging
                 var errors = ModelState.Values.SelectMany(v => v.Errors);
                 foreach (var error in errors)
                 {
@@ -143,27 +148,22 @@ namespace MediCareHub.Controllers
                 }
                 return View(model);
             }
-            if (ModelState.IsValid)
+
+            var appointment = _context.Appointments.FirstOrDefault(a => a.AppointmentId == id);
+            if (appointment == null)
             {
-                var appointment = _context.Appointments.FirstOrDefault(a => a.AppointmentId == id);
-                if (appointment == null)
-                {
-                    return NotFound();
-                }
-
-                //appointment.DoctorId = model.DoctorId;
-                appointment.PatientId = model.PatientId;
-                //appointment.AppointmentDate = model.AppointmentDate;
-                appointment.Status = model.Status;
-                appointment.Notes = model.Notes;
-
-                _context.SaveChanges();
-
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
-            return View(model);
+            // Update the appointment fields
+            appointment.Status = model.Status;
+            appointment.Notes = model.Notes;
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
+
 
         public IActionResult Delete(int id)
         {

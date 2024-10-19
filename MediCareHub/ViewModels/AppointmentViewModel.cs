@@ -16,19 +16,17 @@ namespace MediCareHub.ViewModels
 
         [Required]
         [Display(Name = "Status")]
-        public string Status { get; set; }  // "Pending", "Completed", "Canceled"
+        public string Status { get; set; } // "Pending", "Completed", "Canceled"
 
         [Display(Name = "Notes")]
         public string Notes { get; set; }
 
-        // Additional properties
         [Display(Name = "Doctor Name")]
         public string DoctorFullName { get; set; } // To display the doctor's name
 
         [Display(Name = "Patient Name")]
         public string PatientFullName { get; set; } // To display the patient's name
 
-        // Medical Record Information
-        public MedicalRecordViewModel MedicalRecord { get; set; } // To display medical report details if available
+        public MedicalRecordViewModel MedicalRecord { get; set; } // Add this line
     }
 }
