@@ -1,0 +1,174 @@
+﻿@model MediCareHub.ViewModels.BookAppointmentViewModel
+@{
+    ViewData["Title"] = "Available Doctors";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml"; // Use the patient layout to maintain consistency
+}
+
+
+@{
+    var currentDate = DateTime.Now;
+    var firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+    var startingDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+    var daysInMonth = DateTime.DaysInMonth(currentDate.Year, currentDate.Month);
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4>@Model.DoctorFullName</h4>
+                        <div class="text-muted">
+                            <i class="bi bi-clock"></i> 45 min slots
+                        </div>
+                    </div>
+
+                    <h5 class="mb-4">Select a Date & Time</h5>
+
+                    <div class="calendar mb-4">
+                        <div class="week-days d-flex">
+                            <div class="flex-fill text-center">SUN</div>
+                            <div class="flex-fill text-center">MON</div>
+                            <div class="flex-fill text-center">TUE</div>
+                            <div class="flex-fill text-center">WED</div>
+                            <div class="flex-fill text-center">THU</div>
+                            <div class="flex-fill text-center">FRI</div>
+                            <div class="flex-fill text-center">SAT</div>
+                        </div>
+
+                        <div class="calendar-days">
+                            @{
+                                var dayCount = 1;
+                                for (int week = 0; week < 6 && dayCount <= daysInMonth; week++)
+                                {
+                                    <div class="week d-flex">
+                                        @for (int day = 0; day < 7; day++)
+                                        {
+                                            if ((week == 0 && day < startingDayOfWeek) || dayCount > daysInMonth)
+                                            {
+                                                <div class="day flex-fill"></div>
+                                            }
+                                            else
+                                            {
+                                                var currentDay = new DateTime(currentDate.Year, currentDate.Month, dayCount);
+                                                var isAvailable = Model.AvailableDates.Contains(currentDay); // Check if the date is available
+
+                                                <div class="day flex-fill text-center @(isAvailable ? "available" : "disabled")"
+                                                     data-date="@currentDay.ToString("yyyy-MM-dd")"
+                                                     @(isAvailable ? $"onclick=selectDate('{currentDay.ToString("yyyy-MM-dd")}')" : "")>
+                                                    @dayCount
+                                                </div>
+
+                                                dayCount++;
+                                            }
+                                        }
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <div id="timeSlots" class="time-slots d-none">
+                        <h6 class="selected-date mb-3"></h6>
+                        <div id="slotButtons" class="slot-buttons"></div>
+                    </div>
+
+                    <form id="bookingForm" asp-action="ConfirmAppointment" method="post" class="d-none">
+                        <input type="hidden" name="DoctorId" value="@Model.DoctorId" />
+                        <input type="hidden" name="AppointmentDate" id="appointmentDate" />
+                        <input type="hidden" name="AppointmentTime" id="appointmentTime" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectDate(dateString) {
+        // Remove previous selection
+        document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+
+        // Add selection to clicked date
+        event.currentTarget.classList.add('selected');
+
+        // Show time slots
+        const timeSlots = document.getElementById('timeSlots');
+        timeSlots.classList.remove('d-none');
+
+        // Update selected date display
+        const date = new Date(dateString);
+        const dateStringFormatted = date.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        document.querySelector('.selected-date').textContent = dateStringFormatted;
+
+        // Get the available time slots for the selected date from the server-side model
+        const availableSlots = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.AvailableSlots));
+
+        // Clear previous slots
+        const slotButtons = document.getElementById('slotButtons');
+        slotButtons.innerHTML = '';
+
+        // Get the slots for the selected date
+        const selectedDateSlots = availableSlots[dateString];
+        if (selectedDateSlots) {
+            selectedDateSlots.forEach(function (slot) {
+                const button = document.createElement('button');
+                button.classList.add('btn', 'btn-outline-primary', 'mb-2', 'w-100');
+                button.textContent = slot;
+                button.onclick = function () {
+                    document.getElementById('appointmentTime').value = slot;
+                    document.getElementById('bookingForm').submit();
+                };
+                slotButtons.appendChild(button);
+            });
+        }
+
+        // Update hidden form field
+        document.getElementById('appointmentDate').value = dateString;
+    }
+</script>
+
+<style>
+    .calendar .week-days {
+        font-size: 0.8rem;
+        color: #666;
+        margin-bottom: 1rem;
+    }
+
+    .calendar .day {
+        padding: 0.5rem;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .calendar .day:hover {
+        background-color: #f0f0f0;
+    }
+
+    .calendar .day.selected {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .calendar .day.disabled {
+        cursor: not-allowed;
+        color: #ccc;
+    }
+
+    .time-slots .btn {
+        text-align: left;
+        padding: 1rem;
+    }
+
+    .time-slots .btn:hover {
+        background-color: #007bff;
+        color: white;
+    }
+</style>
+

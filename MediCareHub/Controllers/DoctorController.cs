@@ -13,14 +13,16 @@ namespace MediCareHub.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IAppointmentRepository _appointmentRepository;  // Added appointment repository
+        private readonly IDoctorAvailabilityRepository _doctorAvailabilityRepository;
         private readonly ILogger<DoctorController> _logger;
 
-        public DoctorController(IDoctorRepository doctorRepository, IUserRepository userRepository, IDepartmentRepository departmentRepository, IAppointmentRepository appointmentRepository, ILogger<DoctorController> logger)
+        public DoctorController(IDoctorRepository doctorRepository, IUserRepository userRepository, IDepartmentRepository departmentRepository, IDoctorAvailabilityRepository doctorAvailabilityRepository, IAppointmentRepository appointmentRepository, ILogger<DoctorController> logger)
         {
             _doctorRepository = doctorRepository;
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
-            _appointmentRepository = appointmentRepository;  // Inject appointment repository
+            _appointmentRepository = appointmentRepository;
+            _doctorAvailabilityRepository = doctorAvailabilityRepository; // Inject appointment repository
             _logger = logger;
         }
 

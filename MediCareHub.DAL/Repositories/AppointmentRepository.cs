@@ -23,6 +23,21 @@ namespace MediCareHub.DAL.Repositories
                 .ThenInclude(d => d.User) // Include associated User of the Doctor
                 .ToListAsync() ?? new List<Appointment>(); ;
         }
+        public async Task<IEnumerable<Appointment>> GetAvailableAppointmentsForDoctor(int doctorId)
+        {
+            return await _context.Appointments
+                .Where(a => a.DoctorId == doctorId)
+                .Include(a => a.Doctor)
+                .ThenInclude(d => d.User) // Include doctor details
+                .ToListAsync();
+        }
+
+        public async Task<Appointment> GetByDoctorAndDateTime(int doctorId, DateTime appointmentDate)
+        {
+            return await _context.Appointments
+                .FirstOrDefaultAsync(a => a.DoctorId == doctorId && a.AppointmentDate == appointmentDate);
+        }
+
 
         // Fetch pending appointments for a specific doctor, including User details
         public async Task<IEnumerable<Appointment>> GetPendingAppointmentsForDoctorAsync(int doctorId)

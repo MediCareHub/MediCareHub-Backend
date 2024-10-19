@@ -2,7 +2,6 @@ using MediCareHub.DAL.Data.Configurations;
 using MediCareHub.DAL.Repositories;
 using MediCareHub.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace MediCareHub
@@ -25,6 +24,7 @@ namespace MediCareHub
             builder.Services.AddScoped<IPatientRepository, PatientRepository>();
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            builder.Services.AddScoped<IDoctorAvailabilityRepository, DoctorAvailabilityRepository>();
 
 
             // Add Cookie Authentication
