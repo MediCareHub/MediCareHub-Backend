@@ -39,11 +39,38 @@
                                            placeholder="Full Name">
                                     <span asp-validation-for="FullName" class="text-danger"></span>
                                 </div>
+
                                 <div class="form-group">
                                     <input asp-for="Email" class="form-control form-control-user"
                                            placeholder="Email Address">
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
+
+                                <!-- New Phone Input Field -->
+                                <div class="form-group">
+                                    <input asp-for="Phone" class="form-control form-control-user"
+                                           placeholder="Phone Number">
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+
+                                <!-- New Date of Birth Input Field -->
+                                <div class="form-group">
+                                    <input asp-for="DateOfBirth" class="form-control form-control-user"
+                                           type="date" placeholder="Date of Birth">
+                                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                </div>
+
+                                <!-- New Gender Dropdown -->
+                                <div class="form-group">
+                                    <select asp-for="Gender" class="form-control">
+                                        <option value="" disabled selected>Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <span asp-validation-for="Gender" class="text-danger"></span>
+                                </div>
+
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input asp-for="Password" type="password" class="form-control form-control-user"
@@ -66,6 +93,7 @@
                                     </select>
                                     <span asp-validation-for="Role" class="text-danger"></span>
                                 </div>
+
                                 <button type="submit" class="btn btn-primary btn-user btn-block">Register Account</button>
                             </form>
 
@@ -90,6 +118,7 @@
 
 </body>
 </html>
+
 
 
 

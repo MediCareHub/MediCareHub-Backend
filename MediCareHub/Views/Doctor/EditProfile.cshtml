@@ -1,0 +1,72 @@
+﻿@model MediCareHub.ViewModels.EditDoctorProfileViewModel
+
+@{
+    ViewData["Title"] = "Edit Doctor Profile";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Edit Your Profile</h1>
+
+    <form asp-action="EditProfile" method="post">
+        <div class="form-group">
+            <label asp-for="FullName"></label>
+            <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Phone"></label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ExperienceYears"></label>
+            <input asp-for="ExperienceYears" class="form-control" type="number" />
+            <span asp-validation-for="ExperienceYears" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Qualification"></label>
+            <input asp-for="Qualification" class="form-control" />
+            <span asp-validation-for="Qualification" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DepartmentId"></label>
+            <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.Departments"></select>
+            <span asp-validation-for="DepartmentId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DateOfBirth"></label>
+            <input asp-for="DateOfBirth" class="form-control" type="date" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Gender"></label>
+            <select asp-for="Gender" class="form-control">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>

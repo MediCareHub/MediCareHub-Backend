@@ -22,5 +22,16 @@ namespace MediCareHub.ViewModels
 
         [Required]
         public string Role { get; set; } // "Patient" or "Doctor"
+
+        [Required(ErrorMessage = "Phone number is required.")]
+        [Phone(ErrorMessage = "Invalid phone number.")]
+        public string Phone { get; set; }
+
+        [Required(ErrorMessage = "Date of birth is required.")]
+        [DataType(DataType.Date)]
+        public DateTime? DateOfBirth { get; set; }
+
+        [Required(ErrorMessage = "Gender is required.")]
+        public string Gender { get; set; }
     }
 }

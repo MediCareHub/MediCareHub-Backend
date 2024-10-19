@@ -1,0 +1,52 @@
+﻿@model MediCareHub.ViewModels.DoctorProfileViewModel
+
+@{
+    ViewData["Title"] = "Doctor Profile";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml"; // Use the same layout as the dashboard
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Doctor Profile</h1>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Profile Information</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Full Name:</strong> @Model.FullName</p>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                    <p><strong>Phone:</strong> @Model.Phone</p>
+                    <p><strong>Date of Birth:</strong> @Model.DateOfBirth?.ToString("yyyy-MM-dd")</p> <!-- Display DateOfBirth -->
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Experience:</strong> @Model.ExperienceYears years</p>
+                    <p><strong>Qualification:</strong> @Model.Qualification</p>
+                    <p><strong>Department:</strong> @Model.DepartmentName</p>
+                    <p><strong>Gender:</strong> @Model.Gender</p> <!-- Display Gender -->
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <p><strong>Description:</strong></p>
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add an Edit Profile Button -->
+    <div class="row">
+        <div class="col-md-12">
+            <a asp-action="EditProfile" class="btn btn-primary">Edit Profile</a>
+        </div>
+    </div>
+</div>

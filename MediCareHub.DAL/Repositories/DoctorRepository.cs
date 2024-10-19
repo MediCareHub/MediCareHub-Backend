@@ -21,6 +21,7 @@ namespace MediCareHub.DAL.Repositories
         {
             return await _context.Doctors
                 .Include(d => d.User)  // Include the related User entity
+                .Include(d =>d.Department)
                 .FirstOrDefaultAsync(d => d.DoctorId == userId);
         }
     }

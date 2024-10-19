@@ -58,7 +58,10 @@ namespace MediCareHub.Controllers
                     Email = model.Email,
                     PasswordHash = HashPassword(model.Password),
                     Role = model.Role,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.Now,
+                    Phone = model.Phone,
+                    DateOfBirth = model.DateOfBirth,
+                    Gender = model.Gender
                 };
 
                 await _userRepository.AddAsync(user);

@@ -3,7 +3,7 @@ using MediCareHub.DAL.Models;
 
 namespace MediCareHub.ViewModels
 {
-    public class DoctorProfileViewModel
+    public class EditDoctorProfileViewModel
     {
         public int UserId { get; set; }
 
@@ -28,11 +28,11 @@ namespace MediCareHub.ViewModels
         [Phone(ErrorMessage = "Invalid phone number.")]
         public string Phone { get; set; }
 
-        // Display only, not required in the form
-        public string DepartmentName { get; set; }
         [DataType(DataType.Date)]
         public DateTime? DateOfBirth { get; set; }
 
         public string Gender { get; set; }
+
+        // Display only, not required in the form
     }
 }
