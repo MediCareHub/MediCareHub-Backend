@@ -1,0 +1,40 @@
+﻿@model MediCareHub.ViewModels.DoctorAvailabilityViewModel
+
+@{
+    ViewData["Title"] = "Doctor Profile";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml"; // Use the same layout as the dashboard
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Set Your Availability</h1>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <form asp-action="SaveAvailability" method="post">
+                <div class="form-group">
+                    <label for="selectedDate">Select Date:</label>
+                    <input type="date" class="form-control" id="selectedDate" name="selectedDate" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="availableSlots">Select Available Time Slots:</label>
+                    <div id="timeSlotSelection">
+                        @for (var i = 0; i < 24 * 60; i += 45)
+                        {
+                            var startTime = TimeSpan.FromMinutes(i);
+                            var endTime = startTime.Add(TimeSpan.FromMinutes(45));
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="availableSlots" value="@startTime.ToString(@"hh\:mm") - @endTime.ToString(@"hh\:mm")" />
+                                <label class="form-check-label">
+                                    @startTime.ToString(@"hh\:mm") - @endTime.ToString(@"hh\:mm")
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save Availability</button>
+            </form>
+        </div>
+    </div>
+</div>
