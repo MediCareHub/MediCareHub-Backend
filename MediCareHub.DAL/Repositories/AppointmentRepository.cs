@@ -51,5 +51,19 @@ namespace MediCareHub.DAL.Repositories
                     .ThenInclude(d => d.User) // Assuming Doctor has a User object with a name
                 .ToListAsync();
         }
+
+
+        public async Task<Appointment> GetallAsync(int appointmentId)
+        {
+            return await _context.Appointments
+                .Include(a => a.Patient) // Assuming there's a relationship with the Patient
+                    .ThenInclude(p => p.User) // Assuming Patient has a User object with a name
+                .Include(a => a.Doctor) // Assuming there's a relationship with the Doctor
+                    .ThenInclude(d => d.User) // Assuming Doctor has a User object with a name
+                .Include(a => a.MedicalRecord) // Assuming there's a relationship with the MedicalRecord
+                .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
+                                
+
+        }
     }
 }

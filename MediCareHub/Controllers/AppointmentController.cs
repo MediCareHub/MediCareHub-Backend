@@ -1,61 +1,69 @@
 ﻿using MediCareHub.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MediCareHub.DAL.Data.Configurations;
-using MediCareHub.DAL.Models;
-using System.Security.Claims;
 using MediCareHub.DAL.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using MediCareHub.DAL.Models;
+
 namespace MediCareHub.Controllers
 {
     public class AppointmentController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IDoctorRepository _doctorRepository;
+        private readonly IAppointmentRepository _appointmentRepository;
+        private readonly ILogger<AppointmentController> _logger;
 
-        public AppointmentController(AppDbContext context, IDoctorRepository doctorRepository)
+        public AppointmentController(IDoctorRepository doctorRepository, IAppointmentRepository appointmentRepository, ILogger<AppointmentController> logger)
         {
-            _context = context;
             _doctorRepository = doctorRepository;
+            _appointmentRepository = appointmentRepository;
+            _logger = logger;
         }
 
-        public async Task<IActionResult> Index() 
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> Index()
         {
             var userId = GetCurrentUserId();
             var doctor = await _doctorRepository.GetByUserId(userId);
 
             if (doctor == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Doctor not found.";
+                return RedirectToAction("Error");
             }
 
-            var appointments = _context.Appointments
-                .Where(a => a.DoctorId == doctor.DoctorId) 
-                .Select(a => new AppointmentViewModel
-                {
-                    AppointmentId = a.AppointmentId,
-                    PatientId = a.PatientId,
-                    PatientFullName = a.Patient.User.FullName,
-                    AppointmentDate = a.AppointmentDate,
-                    Status = a.Status,
-                    Notes = a.Notes,
-                }).ToList();
+            var appointments = await _appointmentRepository.GetAppointmentsForDoctorAsync(doctor.DoctorId);
 
-            return View(appointments);
+            var appointmentViewModels = appointments.Select(a => new AppointmentViewModel
+            {
+                AppointmentId = a.AppointmentId,
+                PatientId = a.PatientId,
+                PatientFullName = a.Patient.User.FullName,
+                AppointmentDate = a.AppointmentDate,
+                Status = a.Status,
+                Notes = a.Notes
+            }).ToList();
+
+            return View(appointmentViewModels);
         }
 
+        [Authorize(Roles = "Doctor")]
         public IActionResult Create()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(AppointmentViewModel model)
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> Create(AppointmentViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var appointment = new Appointment
                 {
-                    //DoctorId = model.DoctorId,
                     PatientId = model.PatientId,
                     AppointmentDate = model.AppointmentDate,
                     Status = model.Status,
@@ -63,60 +71,25 @@ namespace MediCareHub.Controllers
                     CreatedAt = DateTime.Now
                 };
 
-                _context.Appointments.Add(appointment);
-                _context.SaveChanges();
+                await _appointmentRepository.AddAsync(appointment);
+                await _appointmentRepository.SaveAsync();
 
+                TempData["SuccessMessage"] = "Appointment created successfully!";
                 return RedirectToAction(nameof(Index));
             }
 
+            LogValidationErrors();
             return View(model);
         }
 
-        public IActionResult Details(int id)
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> Details(int id)
         {
-            var appointment = _context.Appointments
-                .Where(a => a.AppointmentId == id)
-                .Select(a => new AppointmentViewModel
-                {
-                    AppointmentId = a.AppointmentId,
-                    PatientId = a.PatientId,
-                    AppointmentDate = a.AppointmentDate,
-                    Status = a.Status,
-                    Notes = a.Notes,
-                    DoctorFullName = a.Doctor.User.FullName,
-                    PatientFullName = a.Patient.User.FullName,
-                    MedicalRecord = _context.MedicalRecords
-                        .Where(mr => mr.AppointmentId == a.AppointmentId)
-                        .Select(mr => new MedicalRecordViewModel
-                        {
-                            RecordId = mr.RecordId,
-                            AppointmentId = mr.AppointmentId,
-                            Diagnosis = mr.Diagnosis,
-                            Medication = mr.Medication,
-                            CreatedAt = mr.CreatedAt
-                        }).FirstOrDefault() // Get the latest medical record or remove if you want all records
-                }).FirstOrDefault();
-
+            var appointment = await _appointmentRepository.GetallAsync(id);
             if (appointment == null)
             {
-                return NotFound();
-            }
-
-            return View(appointment);
-        }
-
-        public IActionResult Edit(int id)
-        {
-            var appointment = _context.Appointments
-                .Include(a => a.Patient) 
-                .ThenInclude(p => p.User)
-                .Include(a => a.Doctor)
-                .ThenInclude(d => d.User)
-                .FirstOrDefault(a => a.AppointmentId == id);
-
-            if (appointment == null)
-            {
-                return NotFound();
+                TempData["ErrorMessage"] = "Appointment not found.";
+                return RedirectToAction("Error");
             }
 
             var model = new AppointmentViewModel
@@ -128,7 +101,33 @@ namespace MediCareHub.Controllers
                 Notes = appointment.Notes,
                 DoctorFullName = appointment.Doctor.User.FullName,
                 PatientFullName = appointment.Patient.User.FullName,
-                MedicalRecord = new MedicalRecordViewModel()
+
+            };
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var appointment = await _appointmentRepository.GetallAsync(id);
+
+            if (appointment == null)
+            {
+                TempData["ErrorMessage"] = "Appointment not found.";
+                return RedirectToAction("Index");
+            }
+
+            var model = new AppointmentViewModel
+            {
+                AppointmentId = appointment.AppointmentId,
+                PatientId = appointment.PatientId,
+                AppointmentDate = appointment.AppointmentDate,
+                Status = appointment.Status,
+                Notes = appointment.Notes,
+                DoctorFullName = appointment.Doctor.User.FullName,
+                PatientFullName = appointment.Patient.User.FullName,
+
             };
 
             return View(model);
@@ -136,84 +135,86 @@ namespace MediCareHub.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, AppointmentViewModel model)
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> Edit(int id, AppointmentViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                // Log errors for debugging
-                var errors = ModelState.Values.SelectMany(v => v.Errors);
-                foreach (var error in errors)
-                {
-                    System.Diagnostics.Debug.WriteLine(error.ErrorMessage);
-                }
+                LogValidationErrors();
                 return View(model);
             }
 
-            var appointment = _context.Appointments.FirstOrDefault(a => a.AppointmentId == id);
+            var appointment = await _appointmentRepository.GetallAsync(id);
+
             if (appointment == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Appointment not found.";
+                return RedirectToAction("Index");
             }
 
-            // Update the appointment fields
             appointment.Status = model.Status;
             appointment.Notes = model.Notes;
 
-            _context.SaveChanges();
+            _appointmentRepository.Update(appointment);
+            await _appointmentRepository.SaveAsync();
 
+            TempData["SuccessMessage"] = "Appointment updated successfully!";
             return RedirectToAction(nameof(Index));
         }
 
-
-        public IActionResult Delete(int id)
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var appointment = _context.Appointments
-                                      .Where(a => a.AppointmentId == id)
-                                      .Select(a => new AppointmentViewModel
-                                      {
-                                          AppointmentId = a.AppointmentId,
-                                          //DoctorId = a.DoctorId,
-                                          PatientId = a.PatientId,
-                                          AppointmentDate = a.AppointmentDate,
-                                          Status = a.Status,
-                                          Notes = a.Notes,
-                                          //CreatedAt = a.CreatedAt
-                                      }).FirstOrDefault();
+            var appointment = await _appointmentRepository.GetallAsync(id);
 
             if (appointment == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Appointment not found.";
+                return RedirectToAction(nameof(Index));
             }
 
-            return View(appointment);
+            var model = new AppointmentViewModel
+            {
+                AppointmentId = appointment.AppointmentId,
+                PatientId = appointment.PatientId,
+                AppointmentDate = appointment.AppointmentDate,
+                Status = appointment.Status,
+                Notes = appointment.Notes
+            };
+
+            return View(model);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var appointment = _context.Appointments.FirstOrDefault(a => a.AppointmentId == id);
+            var appointment = await _appointmentRepository.GetallAsync(id);
+
             if (appointment == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Appointment not found.";
+                return RedirectToAction(nameof(Index));
             }
 
-            _context.Appointments.Remove(appointment);
-            _context.SaveChanges();
+            _appointmentRepository.Delete(appointment);
+            await _appointmentRepository.SaveAsync();
 
+            TempData["SuccessMessage"] = "Appointment deleted successfully!";
             return RedirectToAction(nameof(Index));
         }
 
+        private void LogValidationErrors()
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            _logger.LogError("Validation Errors: " + string.Join(", ", errors));
+        }
 
         private int GetCurrentUserId()
         {
-            // Retrieve the current user ID from claims
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             return userIdClaim != null ? int.Parse(userIdClaim.Value) : 0;
         }
-
-
     }
-
 }
-
